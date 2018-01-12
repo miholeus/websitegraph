@@ -26,7 +26,7 @@ If url is not set, then default one will be used `quotes.toscrape.com`, default 
 
 You can also set output file for `spider` by setting `output` param
 
-```make run rul=<url> N=<depth> output=<output.json>```.
+```make run url=<url> N=<depth> output=<output.json>```.
 
 Script results will be placed in `output` file. Different output formats
 are supported, but graph builder uses only `json` now.

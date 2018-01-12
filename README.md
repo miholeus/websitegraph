@@ -14,6 +14,8 @@ Run
 
 ## Usage 
 
+### Build graph
+
 First of all you need to run spider. It can be done with the following command
  
 ```make run```.
@@ -35,3 +37,17 @@ If you get hundred megabytes or gigabyte file, then it is wiser to set `jl` (jso
 but graph builder needs to be rewritten in that case.
 
 For simplicity lets use `json` for builder.
+
+### Calculate diameter
+
+Run command
+
+```python3 diameter.py <output.json>```
+
+The result will be something like this
+
+```
+Diameter is: 9
+Url path is: http://quotes.toscrape.com -> http://quotes.toscrape.com/page/2/ -> http://quotes.toscrape.com/page/3/ -> http://quotes.toscrape.com/page/4/ -> http://quotes.toscrape.com/page/5/ -> http://quotes.toscrape.com/page/6/ -> http://quotes.toscrape.com/page/7/ -> http://quotes.toscrape.com/page/8/ -> http://quotes.toscrape.com/page/9/ -> http://quotes.toscrape.com/page/10/
+
+```

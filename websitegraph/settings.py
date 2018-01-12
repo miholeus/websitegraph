@@ -15,6 +15,7 @@ SPIDER_MODULES = ['websitegraph.spiders']
 NEWSPIDER_MODULE = 'websitegraph.spiders'
 
 LOG_ENABLED = True
+DEPTH_LIMIT = 5
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'websitegraph (+http://www.yourdomain.com)'
 
@@ -64,9 +65,9 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
+# ITEM_PIPELINES = {
 #    'websitegraph.pipelines.WebsitegraphPipeline': 300,
-#}
+# }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html

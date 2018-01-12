@@ -5,10 +5,14 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/items.html
 
-import scrapy
+from scrapy.item import Item, Field
 
 
-class WebsitegraphItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class WebsitegraphItem(Item):
+    """
+    Website fields
+    """
+    depth = Field()
+    current_url = Field()
+    referring_url = Field()
+

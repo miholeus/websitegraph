@@ -1,54 +1,69 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from urllib.parse import urlparse
+from websitegraph.items import WebsitegraphItem
+from scrapy.spiders import CrawlSpider, Rule
+from scrapy.linkextractors import LinkExtractor
 
 
-class GraphSpider(scrapy.Spider):
+class GraphSpider(CrawlSpider):
     """
     Looks through page and fetches urls recursively
     """
     name = 'graph_spider'
-    depth = 3
     start_url = None
 
-    def __init__(self, name=None, **kwargs):
+    custom_settings = {
+        'DEPTH_LIMIT': 5
+    }
+
+    rules = (
+        Rule(LinkExtractor(allow=("", ), ), callback="parse_items",
+             follow=True),
+    )
+
+    def __init__(self, **kwargs):
+        # logger = logging.getLogger('scrapy.spidermiddlewares.httperror')
+        # logger.setLevel(logging.ERROR)
+
         super().__init__(name=None, **kwargs)
+
+    def get_allowed_domains(self):
         domain = getattr(self, 'url', None)
         if domain is None:
             raise ValueError("Url is not set")
-        if not domain.startswith('http://') or not domain.startswith('https://'):
+        if not domain.startswith('http'):
             domain = '{scheme}://{domain}'.format(scheme='http', domain=domain)
         # we start from given url
         self.start_url = domain
         if urlparse(domain).hostname is None:
             raise ValueError("Hostname is not valid")
         # set allowed domain to 1 host only
-        self.allowed_domains = [urlparse(domain).hostname]
+        print("allowed domain " + urlparse(domain).hostname)
+        return [urlparse(domain).hostname]
 
     def start_requests(self):
-        depth = getattr(self, 'N', None)
-        if depth is not None:
-            self.depth = depth
+        self.get_allowed_domains()
 
         yield scrapy.Request(self.start_url, self.parse)
 
-    # def __init__(self, *args, **kwargs):
-    #     logger = logging.getLogger('scrapy.spidermiddlewares.httperror')
-    #     logger.setLevel(logging.ERROR)
-    #     super().__init__(*args, **kwargs)
+    def _compile_rules(self):
+        extractor = LinkExtractor(allow=("", ), allow_domains=self.get_allowed_domains(), )
+        self.rules[0].link_extractor = extractor
+        super()._compile_rules()
 
-    def parse(self, response):
-        base_url = response.url.rstrip('/')
-        urls = response.css('a::attr(href)').extract()
-        print("base url is " + base_url)
-        for url in urls:
-            if response.urljoin(url).rstrip('/') == base_url:
-                continue
-            yield {
-                'base_url': base_url,
-                'url': url
-            }
-        # another loop is done because we want to save the order of fetched urls
-        for url in urls:
-            yield response.follow(url, callback=self.parse)
+    def parse_items(self, response):
+        items = []
+        item = WebsitegraphItem()
+        item["depth"] = response.meta["depth"]
+        item["current_url"] = response.url
+        referring_url = response.request.headers.get('Referer', None)
+        if referring_url is not None:
+            try:
+                referring_url = referring_url.decode("utf-8")
+            except AttributeError:
+                pass
+        item["referring_url"] = referring_url
+        items.append(item)
+        return items
 

@@ -2,8 +2,8 @@
 
 from collections import defaultdict
 from py2neo import Graph, Node, Relationship
+from tools import build_graph
 import begin
-import json
 
 # this is the example of graph
 # g = {"a": ["b", "d"],
@@ -11,23 +11,6 @@ import json
 #      "c": [],
 #      "d": ["e"],
 #      "e": []}
-
-
-def build_graph(path):
-    """
-    Builds graph from given path file
-    :param path:
-    :return:
-    """
-    with open(path) as data:
-        d = json.load(data)
-        graph = defaultdict(list)
-        for url in d:
-            if url["referring_url"] is None:
-                continue
-            if not url["current_url"] in url["referring_url"]:
-                graph[url["referring_url"]].append(url["current_url"])
-        return graph
 
 
 @begin.start(auto_convert=True)
@@ -53,7 +36,6 @@ def main(path: 'Set path to file'):
                     tx.create(node_relation)
                 except Exception as e:
                     print("Error in building relationship: " + str(e))
-                    pass
             tx.commit()
         except Exception as e:
             print("got error: " + str(e))

@@ -14,14 +14,16 @@ limit 1
 """
 
 data = graph_db.data(query)
-
-data = data[0]
-print("Diameter is: {}".format(data['L']-1))
-path = []
-for rel in data['p']:
-    path.append(rel.start_node()['name'])
-# path may be different compared to diameter.py script
-# this happens if there are multiple nodes with the same longest path
-# neo4j makes its own sorting
-print("Url path is: {}".format(" -> ".join(path)))
+if data:
+    data = data[0]
+    print("Diameter is: {}".format(data['L']-1))
+    path = []
+    for rel in data['p']:
+        path.append(rel.start_node()['name'])
+    # path may be different compared to diameter.py script
+    # this happens if there are multiple nodes with the same longest path
+    # neo4j makes its own sorting
+    print("Url path is: {}".format(" -> ".join(path)))
+else:
+    print("No data found in Neo4J")
 

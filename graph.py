@@ -73,7 +73,7 @@ class Graph(object):
         for (start, end) in pairs:
             paths = self.find_all_paths(start, end)
             if len(paths) > 0:
-                smallest = sorted(paths)[0]
+                smallest = sorted(paths, key=len)[0]
                 smallest_paths.append(smallest)
 
         smallest_paths.sort(key=len)

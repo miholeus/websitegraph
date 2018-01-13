@@ -60,6 +60,6 @@ Let's try this example with neo4j. Run following commands
 2. Go to container ```docker-compose exec python bash```
 3. Install deps in container ```make install```
 4. Run spider to get data ```make run url=<url> N=<depth> output=<output.json>```
-5. Upload data to Neo4J ```python neo4j_add_data.py```
+5. Upload data to Neo4J ```python neo4j_add_data.py <output.json>```
 6. Get result ```python neo4j_search.py```
 7. ... PROFIT!!!
